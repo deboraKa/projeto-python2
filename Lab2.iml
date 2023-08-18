@@ -1,8 +1,482 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<module type="PYTHON_MODULE" version="4">
-  <component name="NewModuleRootManager">
-    <content url="file://$MODULE_DIR$" />
-    <orderEntry type="inheritedJdk" />
-    <orderEntry type="sourceFolder" forTests="false" />
-  </component>
-</module>
+
+# bibliotecas utilizadas
+from Classes import *
+from time import sleep
+from datetime import datetime
+
+# Menu Principal
+
+def menu_inicial():
+    while True:
+        try:
+            print('\033[1:35m =-' * 30)
+            print(' '*20, 'BEM VINDO AO SISTEMA CADUNI')
+            print('\033[1:35m =-' * 30)
+            print("""
+                     Escolha uma opção:
+                    [1] - Registro
+                    [2] - Visualizar a tabela
+                    [3] - Excluir um cadastro
+                    [4] - Sair do programa   
+                    """)
+            print('=-' * 30)
+
+            opcao_menu_inicial = int(input('Qual dos serviços deseja escolher:'))
+
+            if opcao_menu_inicial == 1:
+                menu_registro()
+
+            elif opcao_menu_inicial == 2:
+                menu_visualizar_tabela()
+
+            elif opcao_menu_inicial == 3:
+                formulario_exclusao()
+
+            elif opcao_menu_inicial == 4:
+
+                print('Encerrando...')
+                break
+
+            else:
+                print('\nOpção incorreta, tente novamente!')
+
+        except ValueError:
+            print('\nOpção incorreta, tente novamente')
+
+    print('Fim do sistema!')
+    sleep(2)
+    print("\n" * 130)
+
+# Função para registrar um cadastro do meu sistema
+
+def menu_registro():
+    while True:
+        try:
+            print('\033[1:35m=-' * 30)
+            print(' '*20, 'REGISTRAR NOVOS CADASTROS')
+            print('\033[1:35m=-' * 30)
+            print(""" Escolha uma opção para registrar:
+                     [1] - Usuário
+                     [2] - Motorista
+                     [3] - Cartão
+                     [4] - Ônibus 
+                     [5] - Retornar ao Menu Inicial  
+                     """)
+            print('\033[1:35m =-' * 30)
+            opcao = int(input())
+            if opcao == 1:
+                registrar_usuario()
+            elif opcao == 2:
+                registrar_motorista()
+            elif opcao == 3:
+                registrar_cartao()
+            elif opcao == 4:
+                registrar_onibus()
+            elif opcao == 5:
+                menu_inicial()
+            else:
+
+                print('\nOpção inválida, tente novamente\n')
+
+        except ValueError:
+
+            print('\nOpção inválida, tente novamente\n')
+            sleep(2)
+            print("\n" * 130)
+
+        menu_inicial()
+
+# Função para visualizar as tabelas do banco
+
+def menu_visualizar_tabela():
+    while True:
+        try:
+            print('\033[1:35m =-' * 30)
+            print(' ' * 20, 'VISUALIZAR CADASTROS')
+            print('\033[1:35m =-' * 30)
+            print("""
+                    Escolha a opção que deseja visualizar:
+                     [1] - Usuário
+                     [2] - Motorista
+                     [3] - Cartão
+                     [4] - Ônibus 
+                     [5] - Retornar ao Menu Inicial  
+                     """)
+            print('\033[1:35m =-' * 30)
+            opcao_tabelas = int(input())
+            if opcao_tabelas == 1:
+                visualizar_tabela_usuario()
+            elif opcao_tabelas == 2:
+                visualizar_tabela_motorista()
+            elif opcao_tabelas == 3:
+                visualizar_tabela_cartao()
+            elif opcao_tabelas == 4:
+                visualizar_tabela_onibus()
+            elif opcao_tabelas == 5:
+                menu_inicial()
+            else:
+                print('DIGITE UM NÚMERO DE 1 Á 5:')
+                menu_visualizar_tabela()
+
+        except ValueError:
+
+            print('\nOpção inválida, tente novamente\n')
+            sleep(2)
+            print("\n" * 130)
+
+        menu_inicial()
+
+def visualizar_tabela_usuario():
+    print('\033[1:35m =-' * 40)
+    print(' '*40, ' TABELA USUÁRIO')
+    print('\033[1:35m =-' * 40)
+    print(f'{"ID USUÁRIO":<15} {"NOME":<15} {"SOBRENOME":<20} {"EMAIL":<22} {"BAIRRO":^15} {"DATA DE NASCIMENTO":^10}')
+    for i in cursor.execute(
+            'select id_usuario, nome, sobrenome, email, bairro, data_nascimento from debora_cassimiro.usuario'):
+        print(
+            f'{i.id_usuario:^11} {i.nome:^19} {i.sobrenome:^12} {i.email:^30} {i.bairro:^15} '
+            f'{str(i.data_nascimento):^15}')
+        print('\n')
+
+    menu_inicial()
+
+def visualizar_tabela_motorista():
+    print('\033[1:35m =-' * 40)
+    print(' '*40, 'TABELA MOTORISTA')
+    print('\033[1:35m =-' * 40)
+    print(f'{"ID MOTORISTA":^11} {"NÚMERO DA CNH":^19} {"NOME":^12} {"SOBRENOME":^30} {"DATA DE NASCIMENTO":^15}')
+    for i in cursor.execute(
+            'select id_motorista, numero_cnh, nome_motorista, sobrenome_motorista, data_nascimento_motorista '
+            'from debora_cassimiro.motorista'):
+        print(
+            f'{i.id_motorista:^11} {i.numero_cnh:^19} {i.nome_motorista:^12} {i.sobrenome_motorista:^30} '
+            f'{str(i.data_nascimento_motorista):^15}')
+        print('\n')
+
+    menu_inicial()
+
+def visualizar_tabela_cartao():
+    print('\033[1:35m =-' * 40)
+    print(' '*40, 'TABELA CARTÃO')
+    print('\033[1:35m =-' * 40)
+    print(f'{"ID CARTÃO":<15} {"ID PROPRIETARIO":<15} {"CRÉDITO DO CARTÃO":<20} {"TIPO DE CARTÃO":<22} '
+          f'{"DATA DE EMISSÃO"}')
+    for i in cursor.execute(
+            'select id_cartao, id_proprietario, quantidade_creditos, tipo_cartao, data_emissao '
+            'from debora_cassimiro.cartao'):
+        print(
+            f'{i.id_cartao:^11} {i.id_proprietario:^19} {i.quantidade_creditos:^12} {i.tipo_cartao:^30} '
+            f'{str(i.data_emissao):^15}')
+        print('\n')
+
+    menu_inicial()
+
+def visualizar_tabela_onibus():
+    print('\033[1:35m =-' * 40)
+    print(' '*40, 'TABELA ÔNIBUS ')
+    print('\033[1:35m =-' * 40)
+    print(f'{"ID MOTORISTA":<15} {"NÚMERO PLACA":<15} {"NÚMERO LINHA":<20} {"MODELO ONIBUS":<22} {"ANO FABRICAÇÃO"}')
+    for i in cursor.execute(
+            'select id_motorista, numero_placa, numero_linha, modelo_bus, ano_fabricacao from debora_cassimiro.onibus'):
+        print(
+            f'{i.id_motorista:^11} {i.numero_placa:^19} {i.numero_linha:^12} {i.modelo_bus:^30} '
+            f'{str(i.ano_fabricacao):^15}')
+        print('\n')
+
+    menu_inicial()
+
+# Funções para os cadastros no Banco
+def registrar_usuario():
+    print('\033[1:35m =-' * 30)
+    print(' '*20, 'CADASTRO DE USUÁRIO')
+    print('\033[1:35m =-' * 30)
+    novo_usuario = usuario()
+    nome = str(input('\033[1:35m Digite seu nome: '))
+    sobrenome = str(input('\033[1:35m Digite seu sobrenome: '))
+    email = str(input('\033[1:35m Digite seu email: '))
+    bairro = str(input('\033[1:35m Digite seu bairro: '))
+    data_nascimento = validar_data()
+    cursor = connect.cursor()
+    cursor.execute("""INSERT INTO debora_cassimiro.usuario (nome, sobrenome, email, bairro, data_nascimento)
+                   VALUES (?,?,?,?,?)""", (nome, sobrenome, email, bairro, data_nascimento))
+    connect.commit()
+    sleep(2)
+    print('\033[1:35m Usuário Registrado com Sucesso!')
+
+    menu_inicial()
+
+def registrar_motorista():
+    print('\033[1:35m=-' * 30)
+    print(' ' * 20, 'CADASTRO DE MOTORISTA')
+    print('\033[1:35m=-' * 30)
+    novo_motorista = motorista()
+    nome_motorista = str(input('\033[1:35m Digite seu nome: '))
+    sobrenome_motorista = str(input('\033[1:35m Digite seu sobrenome: '))
+    numero_cnh = str(input('\033[1:35m Digite o número de sua CNH: '))
+    data_nascimento_motorista = validar_data()
+    cursor = connect.cursor()
+    cursor.execute("""INSERT INTO debora_cassimiro.motorista (nome_motorista, sobrenome_motorista, numero_cnh, 
+    data_nascimento_motorista)
+                      VALUES (?,?,?,?)""", (nome_motorista, sobrenome_motorista, numero_cnh,
+                                            data_nascimento_motorista))
+    connect.commit()
+    sleep(2)
+    print('\033[1:35m Motorista Registrado com Sucesso!')
+
+    menu_inicial()
+
+
+def registrar_cartao():
+    print('\033[1:35m=-' * 30)
+    print(' '*20, 'CADASTRO DE CARTÃO')
+    print('\033[1:35m=-' * 30)
+    novocartao = cartao()
+    id_proprietario = int(input('\033[1:35m Digite seu ID: '))
+    quantidade_creditos = erros_credito()
+    tipo_cartao = erros_cartao()
+    data_emissao = datetime.today()
+    cursor = connect.cursor()
+    cursor.execute("""INSERT INTO debora_cassimiro.cartao (id_proprietario, quantidade_creditos,
+     tipo_cartao,data_emissao)
+                          VALUES (?,?,?,?)""", (id_proprietario, quantidade_creditos, tipo_cartao, data_emissao))
+    connect.commit()
+    sleep(2)
+    print('\033[1:35m Cartão Registrado com Sucesso!')
+
+    menu_inicial()
+
+
+def registrar_onibus():
+    cursor = connect.cursor()
+    print('\033[1:35m =-' * 40)
+    print(' ' * 40, 'TABELA ÔNIBUS ')
+    print('\033[1:35m =-' * 40)
+    print(f'{"ID MOTORISTA":<15} {"NÚMERO PLACA":<15} {"NÚMERO LINHA":<20} {"MODELO ONIBUS":<22} {"ANO FABRICAÇÃO"}')
+    for i in cursor.execute(
+            'select id_motorista, numero_placa, numero_linha, modelo_bus, ano_fabricacao from debora_cassimiro.onibus'):
+        print(
+            f'{i.id_motorista:^11} {i.numero_placa:^19} {i.numero_linha:^12} {i.modelo_bus:^30} '
+            f'{str(i.ano_fabricacao):^15}')
+        print('\n')
+    novo_onibus = onibus()
+    numero_placa = str(input('\033[1:35m Digite o número da placa do seu ônibus: '))
+    numero_linha = str((input('\033[1:35m Digite o número da linha de ônibus: ')))
+    modelo_bus = erros_motorita()
+    ano_fabricacao = str(input('\033[1:35m Digite o ano de fabricação do ônibus: '))
+    #novo_onibus.onibus_setters(placa, linha,  modelo_onibus, ano_fabricacao)
+    cursor.execute("""INSERT INTO debora_cassimiro.onibus (numero_placa, numero_linha, modelo_bus, ano_fabricacao)
+                              VALUES (?,?,?,?)""", (numero_placa, numero_linha, modelo_bus, ano_fabricacao))
+    connect.commit()
+    sleep(2)
+    print('\033[1:35m Onibus Registrado com Sucesso!')
+
+    menu_inicial()
+
+# Funções para excluir os cadastros do Banco
+
+def formulario_exclusao():
+    # Função para excluir um cadastro do meu sistema
+    while True:
+        try:
+            print('\033[1:35m=-' * 30)
+            print(' '*20,'FORMULÁRIO DE EXCLUSÃO')
+            print('\033[1:35m=-' * 30)
+            deletar = int(input("""\nEscolha a opção que deseja excluir:
+                                  [1] - Usuário
+                                  [2] - Motorista
+                                  [3] - Cartão
+                                  [4] - Ônibus 
+                                  [5] - Finalizar  
+                                 >>>"""))
+            if deletar == 1:
+                # Se escolher a opção 1 irá excluir um cadastro da tabela usuário
+                excluir_usuario()
+
+
+            elif deletar == 2:
+                # Se escolher a opção 2 irá excluir um cadastro da tabela motorista
+                excluir_motorista()
+
+
+            elif deletar == 3:
+                # Se escolher a opção 1 irá excluir um cadastro da tabela onibus
+                excluir_cartao()
+
+            elif deletar == 4:
+                # Se escolher a opção 1 irá excluir um cadastro da tabela cartão
+                excluir_onibus()
+
+            elif deletar == 5:
+
+                break
+
+            else:
+
+                print('\nOpção inválida, tente novamente\n')
+
+        except ValueError:
+
+            print('\nOpção inválida, tente novamente\n')
+    sleep(2)
+    print("\n" * 130)
+
+
+def excluir_usuario():
+    print(f'\033[1:35m-=-=-=-=-=-= -=-=-=-=-=-= -=-=-=-=-=-= TABELA USUÁRIO -=-=-=-=-=-= -=-=-=-=-=-= -=-=-=-=-=-=')
+    print(f'{"ID USUÁRIO":<15} {"NOME":<15} {"SOBRENOME":<20} {"EMAIL":<22} {"BAIRRO"} {"DATA DE NASCIMENTO"}')
+    for i in cursor.execute(
+            'select id_usuario, nome, sobrenome, email, bairro, data_nascimento from debora_cassimiro.usuario'):
+        print(
+            f'{i.id_usuario:^11} {i.nome:^19} {i.sobrenome:^12} {i.email:^30} {i.bairro:^15}'
+            f' {str(i.data_nascimento):^15}')
+    id_input = int(input('Digite o ID do usuário que escolheu excluir; '))
+    excluir_usuario1 = (f""" DELETE FROM [debora_cassimiro].[usuario] WHERE id_usuario = '{id_input}'""")
+    cursor.execute(excluir_usuario1)
+    cursor.commit()
+    sleep(1)
+    print('Cadastro excluido com Sucesso!')
+
+    menu_inicial()
+
+
+def excluir_motorista():
+    print(f'\033[1:35m-=-=-=-=-=-= -=-=-=-=-=-= -=-=-=-=-=-= TABELA MOTORISTA -=-=-=-=-=-= -=-=-=-=-=-= -=-=-=-=-=-=')
+    print(f'{"ID MOTORISTA":<15} {"NÚMERO DA CNH":<15} {"NOME":<20} {"SOBRENOME":<22} {"DATA DE NASCIMENTO"}')
+    for i in cursor.execute(
+            'select id_motorista, numero_cnh, nome_motorista, sobrenome_motorista, '
+            'data_nascimento_motorista from debora_cassimiro.motorista'):
+        print(
+            f'{i.id_motorista:^11} {i.numero_cnh:^19} {i.nome_motorista:^12} {i.sobrenome_motorista:^30} {str(i.data_nascimento_motorista):^15}')
+    id_imput = int(input('Digite o ID do motorista que escolheu excluir; '))
+    excluir_motorista1 = (f""" DELETE FROM [debora_cassimiro].[motorista] WHERE id_motorista =
+     '{id_imput}'""")
+    cursor.execute(excluir_motorista1)
+    cursor.commit()
+    sleep(1)
+    print('Cadastro excluido com Sucesso!')
+
+    menu_inicial()
+
+
+
+def excluir_cartao():
+    print(f'\033[1:35m-=-=-=-=-=-= -=-=-=-=-=-= -=-=-=-=-=-= TABELA CARTÃO -=-=-=-=-=-= -=-=-=-=-=-= -=-=-=-=-=-=')
+    print(
+        f'{"ID CARTÃO":<15} {"ID PROPRIETARIO":<15} {"CRÉDITO DO CARTÃO":<20} {"TIPO DE CARTÃO":<22} {"DATA DE EMISSÃO"}')
+    for i in cursor.execute(
+            'select id_cartao, id_proprietario, quantidade_creditos, tipo_cartao, '
+            'data_emissao from debora_cassimiro.cartao'):
+        print(
+            f'{i.id_cartao:^11} {i.id_proprietario:^19} {i.quantidade_creditos:^12} {i.tipo_cartao:^30} {i.data_emissao:^15}')
+    id_imput = int(input('Digite o ID do cartao que escolheu excluir; '))
+    excluir_cartao1 = (f""" DELETE FROM [debora_cassimiro].[cartao] 
+    WHERE id_cartao = '{id_imput}'""")
+    cursor.execute(excluir_cartao1)
+    cursor.commit()
+    sleep(1)
+    print('Cadastro excluido com Sucesso!')
+
+    menu_inicial()
+
+
+def excluir_onibus():
+    cursor = connect.cursor()
+    print(f'\033[1:35m-=-=-=-=-=-= -=-=-=-=-=-= -=-=-=-=-=-=  TABELA ÔNIBUS -=-=-=-=-=-= -=-=-=-=-=-= -=-=-=-=-=-=')
+    print(f'{"ID MOTORISTA":<15} {"NÚMERO PLACA":<15} {"NÚMERO LINHA":<20} {"MODELO ONIBUS":<22} {"ANO FABRICAÇÃO"}')
+    for i in cursor.execute(
+            'select id_motorista, numero_placa, numero_linha, modelo_bus, ano_fabricacao from debora_cassimiro.onibus'):
+        print(
+            f'{i.id_motorista:^11} {i.numero_placa:^19} {i.numero_linha:^12} {i.modelo_bus:^30}'
+            f' {str(i.ano_fabricacao):^15}')
+    id_imput = int(input('Digite o ID do motorista que escolheu excluir; '))
+    excluir_onibus1 = (f""" DELETE FROM [debora_cassimiro].[onibus] 
+    WHERE id_motorista = '{id_imput}'""")
+    cursor.execute(excluir_onibus1)
+    cursor.commit()
+    sleep(1)
+    print('Cadastro excluido com Sucesso!')
+
+    menu_inicial()
+
+# Funções para tratamento de erros
+
+def erros_credito():
+#Função para não validar o cadastro do cartão quando o crédito for menor do que 0
+    qntd_credito = -1
+    while qntd_credito < 0:
+        try:
+            qntd_credito = float(input('\033[1:35m Digite a quantidade de crédito que deseja: '))
+            if qntd_credito >= 0:
+                return qntd_credito
+            else:
+                print('Quantidade inválida, tente novamente')
+        except ValueError:
+            print('Quantidade Inválida, tente novamente')
+
+def erros_cartao():
+
+#Função para não validar o cadastro do cartão quando a opção não for uma das disponível
+    tipo_cartao = 0
+    while tipo_cartao <1 or tipo_cartao >4:
+        try:
+            tipo_cartao = int(input('''Qual o tipo do cartão? 
+    [1] - COMUM
+    [2] - ESTUDANTE
+    [3] - SÊNIOR
+    [4] - PREFERENCIAL
+    >>>'''))
+            if tipo_cartao == 1:
+                return 'Comum'
+            elif tipo_cartao == 2:
+                return 'Estudante'
+            elif tipo_cartao == 3:
+                return 'Sênior'
+            elif tipo_cartao == 4:
+                return 'Preferencial'
+            else:
+                print('Opção Inválida, tente novamente')
+        except ValueError:
+            print('Opção Inválida, tente novamente')
+
+def validar_data():
+
+    #Função para tratar erro da data de nascimento do Usuário e do Motorista
+    while True:
+        try:
+            nascimento = input('\033[1:35m Digite sua Data de Nascimento no Formato [DIA/MÊS/ANO]: ')
+            data_nascimento = datetime.strptime(nascimento, '%d/%m/%Y').date()
+            return data_nascimento
+
+            break
+
+        except ValueError:
+            print('Data inválida, tente novamente')
+
+
+def erros_motorita():
+    # Função para não validar o cadastro do Onibus quando a opção não for uma das disponível
+    modelo_bus = 0
+    while modelo_bus < 1 or modelo_bus > 3:
+        try:
+            modelo_bus = int(input('''Qual o modelo do onibus? 
+    [1] - CONVENCIONAL
+    [2] - ESCOLAR
+    [3] - Executivo
+    >>>'''))
+            if modelo_bus == 1:
+                return 'Convencional'
+            elif modelo_bus == 2:
+                return 'Escolar'
+            elif modelo_bus == 3:
+                return 'Executivo'
+            else:
+                print('Opção Inválida, tente novamente')
+        except ValueError:
+            print('Opção Inválida, tente novamente')
+
+
+menu_inicial()
+
+
+
+
